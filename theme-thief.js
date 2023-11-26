@@ -5,7 +5,6 @@ javascript:(function(){
 
     let textMode = false;
 
-    //check if container already exists
     if (document.getElementById('color-container')) {
         document.getElementById('color-container').remove();
         uniqueBackgroundColors.clear();
@@ -16,7 +15,6 @@ javascript:(function(){
     function copyToClipboard(text) {
         if (text === '' || text === undefined) return;
         navigator.clipboard.writeText(text).then(() => {
-            //alert('Copied to clipboard: ' + text);
             console.log(text);
             showCopiedNotification();
         });
@@ -108,7 +106,6 @@ javascript:(function(){
             colorSwatch.style.fontFamily = 'Arial, Helvetica, sans-serif';
             colorSwatch.style.lineHeight = '12px';
             colorSwatch.style.textAlign = 'center';
-            //outlined text so it's visible on white background
             colorSwatch.style.color = 'black';
             colorSwatch.style.textShadow = '1px 1px 0px white, -1px -1px 0px white, 1px -1px 0px white, -1px 1px 0px white';
     
@@ -143,6 +140,30 @@ javascript:(function(){
         return fontFamilyElement;
     }
 
+    function createButton(text, top, bot, left, right, bgColor) {
+        let button = document.createElement('button');
+        button.textContent = text;
+        button.style.position = 'absolute';
+        button.style.top = top;
+        button.style.bottom = bot;
+        button.style.left = left;
+        button.style.right = right;
+        button.style.zIndex = '10000';
+        button.style.height = '30px';
+        button.style.backgroundColor = bgColor;
+        button.style.border = '1px solid black';
+        button.style.borderRadius = '5px';
+        button.style.color = 'white';
+        button.style.fontFamily = 'Arial, Helvetica, sans-serif';
+        button.style.fontSize = '16px';
+        button.style.padding = '0px 10px';
+
+        button.onmouseover = () => {
+            button.style.cursor = 'pointer';
+        }
+        return button;
+    }
+
     function downloadAsJSON() {
         let data = {
             'backgroundColors': Array.from(uniqueBackgroundColors),
@@ -150,7 +171,6 @@ javascript:(function(){
             'fontFamilies': Array.from(uniqueFontFamilies)
         };
     
-        // JSON.stringify with indentation
         let formattedData = JSON.stringify(data, null, 4);
         let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(formattedData);
         let dlAnchorElem = document.createElement('a');
@@ -166,15 +186,10 @@ javascript:(function(){
         let backgroundColor = computedStyle.getPropertyValue('background-color');
         let fontFamily = computedStyle.getPropertyValue('font-family');
     
-        // Add colors to the Set
         uniqueTextColors.add(textColor);
         uniqueBackgroundColors.add(backgroundColor);
         uniqueFontFamilies.add(fontFamily);
     });
-
-    console.log(uniqueBackgroundColors);
-    console.log(uniqueTextColors);
-    console.log(uniqueFontFamilies);
 
     let bgColorPopup = createPopup();
     let textColorPopup = createPopup();
@@ -202,59 +217,9 @@ javascript:(function(){
     mainContainer.appendChild(textColorPopup);
     mainContainer.appendChild(fontFamilyPopup);
 
-    containerCloseButton = document.createElement('button');
-    containerCloseButton.textContent = 'Close';
-    containerCloseButton.style.position = 'absolute';
-    containerCloseButton.style.bottom = '0px';
-    containerCloseButton.style.right = '10px';
-    containerCloseButton.style.zIndex = '10000';
-    containerCloseButton.style.height = '30px';
-    containerCloseButton.style.backgroundColor = '#cf0502';
-    containerCloseButton.style.border = '1px solid black';
-    containerCloseButton.style.borderRadius = '5px';
-    containerCloseButton.style.color = 'white';
-    containerCloseButton.style.fontFamily = 'Arial, Helvetica, sans-serif';
-    containerCloseButton.style.fontSize = '16px';
-
-    containerCloseButton.onmouseover = () => {
-        containerCloseButton.style.cursor = 'pointer';
-    }
-
-    containerDownloadButton = document.createElement('button');
-    containerDownloadButton.textContent = 'Download as JSON';
-    containerDownloadButton.style.position = 'absolute';
-    containerDownloadButton.style.bottom = '0px';
-    containerDownloadButton.style.left = '10px';
-    containerDownloadButton.style.zIndex = '10000';
-    containerDownloadButton.style.height = '30px';
-    containerDownloadButton.style.backgroundColor = '#0273cf';
-    containerDownloadButton.style.border = '1px solid black';
-    containerDownloadButton.style.borderRadius = '5px';
-    containerDownloadButton.style.color = 'white';
-    containerDownloadButton.style.fontFamily = 'Arial, Helvetica, sans-serif';
-    containerDownloadButton.style.fontSize = '16px';
-
-    containerDownloadButton.onmouseover = () => {
-        containerDownloadButton.style.cursor = 'pointer';
-    }
-
-    containerTextModeButton = document.createElement('button');
-    containerTextModeButton.textContent = 'Text mode';
-    containerTextModeButton.style.position = 'absolute';
-    containerTextModeButton.style.bottom = '0px';
-    containerTextModeButton.style.left = '240px';
-    containerTextModeButton.style.zIndex = '10000';
-    containerTextModeButton.style.height = '30px';
-    containerTextModeButton.style.backgroundColor = '#d3d618';
-    containerTextModeButton.style.border = '1px solid black';
-    containerTextModeButton.style.borderRadius = '5px';
-    containerTextModeButton.style.color = 'white';
-    containerTextModeButton.style.fontFamily = 'Arial, Helvetica, sans-serif';
-    containerTextModeButton.style.fontSize = '16px';
-
-    containerTextModeButton.onmouseover = () => {
-        containerTextModeButton.style.cursor = 'pointer';
-    }
+    containerCloseButton = createButton('Close', 'auto', '0px', 'auto', '10px', '#cf0502');
+    containerDownloadButton = createButton('Download as JSON', 'auto', '0px', '10px', 'auto', '#0273cf');
+    containerTextModeButton = createButton('Text mode', 'auto', '0px', '240px', 'auto', '#d3d618');
 
     containerDownloadButton.onclick = () => downloadAsJSON();
 
@@ -269,11 +234,11 @@ javascript:(function(){
                 element.style.fontFamily = 'Arial, Helvetica, sans-serif';
                 element.style.lineHeight = '12px';
                 element.style.textAlign = 'center';
-                //outlined text so it's visible on white background
                 element.style.color = 'black';
                 element.style.textShadow = '1px 1px 0px white, -1px -1px 0px white, 1px -1px 0px white, -1px 1px 0px white';
-        
-                element.innerHTML = element.title;
+
+                let newTitle = element.title.split(' ').slice(3).join(' ');
+                element.innerHTML = newTitle;
             });
         } else {
             document.querySelectorAll('.color-swatch').forEach(element => {
