@@ -16,7 +16,7 @@ Copy the content of [theme-thief-minify.js](theme-thief-minify.js) into bookmark
 
 - There is a good chance that many of the fonts have to be downloaded from somewhere before you can use them on your own.
 
-- This bookmarklet doesn not collect or transmit any data from the user's browser.
+- This bookmarklet does not collect or transmit any data from the user's browser.
 
 - We suggest that you use this bookmarklet ethically and responsibly.
 
